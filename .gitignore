@@ -1,0 +1,4 @@
+build
+*.vcd
+output.txt
+.DS_Store

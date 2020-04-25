@@ -34,10 +34,10 @@ int main(int argc, char *argv[]) {
   char inputSymbol[2];
   int symbolIdx;
   long int currFrame; //most recent timestamp
-  long int symbolPrevFrame[256]; //previous timestamp for each symbol
+  long int symbolPrevFrame[maxSymbol]; //previous timestamp for each symbol
   // symbol can have different previous array
-  std::ofstream *filePtr[256];
-  for (i = 0; i < 256; i++) {
+  std::ofstream *filePtr[maxSymbol];
+  for (i = 0; i < maxSymbol; i++) {
     filePtr[i] = NULL;
     symbolPrevFrame[i] = 0;
   }

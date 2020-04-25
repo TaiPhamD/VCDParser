@@ -16,6 +16,7 @@ The number of rows for the output file is the max row of all state transition be
 git clone https://github.com/TaiPhamD/VCDParser
 cd VCDParser
 mkdir build
+cd build 
 cmake ..
 make
 ./CVDConvert input.vcd

@@ -17,7 +17,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/CVDConvert",
-            "args": ["micci_10s.vcd"],
+            "args": ["input.vcd"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],

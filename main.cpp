@@ -42,17 +42,17 @@ int main(int argc, char *argv[]) {
             // first time we detected a $varwire
             outFile << "TIMESTAMP,";
           }
-          line =
-              line +
-              12;  // advance line by 8 characters to get rid of "var wire X "
+          // advance line by 8 characters to get rid of "var wire X "
+          line = line + 12;
           count = strlen(line);
-          line[count - 6] =
-              0;  // get rid of the $end so we only get the variable name
+
+          // get rid of the $end so we only get the variable name
+          line[count - 6] = 0;  
           outFile << line << ",";  // print out variable name
           foundVar = true;
 
         } else {
-          // we did not match a $varwire but previously did 
+          // we did not match a $varwire but previously did
           // so now we must be done scanning for var name
           if (foundVar == true) {
             doneVarRead = true;

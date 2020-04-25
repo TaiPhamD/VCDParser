@@ -10,10 +10,12 @@ The number of rows for the output file is the max row of all state transition be
 
 ### compile & prereg
 
-### Requires for you to have cmake installed and C++ compiler
+- Requires for you to have cmake installed and C++ compiler
 
+```
 git clone https://github.com/TaiPhamD/VCDParser
 mkdir build
 cmake ..
 make
 ./CVDConvert input.vcd
+```

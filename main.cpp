@@ -20,9 +20,7 @@ int main(int argc, char *argv[]) {
   int j = 0;
   char header;
   long int currFrame = 0;
-  long int prevFrame = 0;
   char dataMap[256];
-  char substr[100];
   for (i = 0; i < 256; i++) dataMap[i] = 0;
 
   i = 0;
@@ -42,12 +40,12 @@ int main(int argc, char *argv[]) {
             // first time we detected a $varwire
             outFile << "TIMESTAMP,";
           }
-          // advance line by 8 characters to get rid of "var wire X "
+          // advance line by 12 characters to get rid of "var wire X "
           line = line + 12;
           count = strlen(line);
 
           // get rid of the $end so we only get the variable name
-          line[count - 6] = 0;  
+          line[count - 6] = 0;
           outFile << line << ",";  // print out variable name
           foundVar = true;
 
@@ -63,8 +61,6 @@ int main(int argc, char *argv[]) {
         break;
       case '#':
         if (currFrame > 0) {
-          // print data from last frame to this curret frame
-          // do{
           outFile << currFrame << ",";
           for (j = 0; j < 256; j++) {
             // print out all data map if we have data for it
@@ -74,14 +70,12 @@ int main(int argc, char *argv[]) {
           }
           outFile << "\n";
           count++;
-          prevFrame = currFrame;
         }
         sscanf(line + 1, "%ld", &currFrame);
         break;
       default:
         // We got data so just store it in our dataMap buffer
         // we will print out the dataMap buffer once we get to the next #
-        count = prevFrame;
         data = line[0];
         index = (int)line[1];
         dataMap[index] = data;

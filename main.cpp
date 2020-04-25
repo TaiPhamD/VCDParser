@@ -86,7 +86,7 @@ int main(int argc, char *argv[]) {
         // time stamps
         if (endTime > 0) {
           outFile << endTime << ",";
-          for (j = 0; j < 256; j++) {
+          for (j = 32; j < 49; j++) {
             // print out all data map if we have data for it
             if (dataMap[j] != 0) {
               outFile << dataMap[j] << ",";

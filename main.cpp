@@ -25,16 +25,11 @@ int main(int argc, char *argv[]) {
   size_t len = 0;
   int i = 0;
   int j = 0;
-
-  i = 0;
-  int step = 0;
   int count = 0;
   char data = 0;
   int index = 0;
   bool doneVarRead = false;
   bool foundVar = false;
-
-  int startTime = 0;
   int endTime = 0;
   double endTimeDouble = 0.0;
   char header;

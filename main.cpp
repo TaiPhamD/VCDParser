@@ -19,24 +19,22 @@ int main(int argc, char *argv[]) {
   if (fp == NULL)
     exit(EXIT_FAILURE);
 
-  // Ouput stream
-  // std::ofstream outFile("output.txt", std::ofstream::out);
-  char *line = NULL;
+  char *line = NULL; // use to read in text input line
   size_t len = 0;
   int i = 0;
   int j = 0;
   int count = 0;
   char data = 0;
   int index = 0;
-  bool doneVarRead = false;
+  bool doneVarRead = false; 
   bool foundVar = false;
   int endTime = 0;
   double endTimeDouble = 0.0;
   char header;
   char inputSymbol[2];
   int symbolIdx;
-  long int currFrame;
-  long int symbolPrevFrame[256];
+  long int currFrame; //most recent timestamp
+  long int symbolPrevFrame[256]; //previous timestamp for each symbol
   // symbol can have different previous array
   std::ofstream *filePtr[256];
   for (i = 0; i < 256; i++) {
@@ -50,21 +48,17 @@ int main(int argc, char *argv[]) {
     switch (header) {
     case '$':
       if (memcmp(line, "$var wire", 8) == 0) {
-        /*if (foundVar == false && !doneVarRead) {
-          // first time we detected a $varwire
-          //outFile << "TIMESTAMP,";
-        }*/
-        // advance line by 12 characters to get rid of "var wire X "
+        // We found a "var wire ..." line
+        // advance read line by 12 characters to get rid of "var wire X "
         line = line + 12;
         count = strlen(line);
-
-        // get rid of the $end so we only get the variable name
+        // get rid of the "$end" text string so we only get the variable name
         line[count - 6] = 0;
         // grab the input symbol to be used as part of the output file name
         inputSymbol[0] = line[0];
         inputSymbol[1] = 0;
         symbolIdx = (int)inputSymbol[0];
-        // create new output stream per found symbol
+        // create new output stream for each found symbol
         std::string fileName = "output_" + std::string(inputSymbol) + ".txt";
         std::cout << "index for: " << inputSymbol << " is " << symbolIdx;
         std::cout << "creating output file: " << fileName << "\n";
@@ -87,12 +81,9 @@ int main(int argc, char *argv[]) {
       sscanf(line + 1, "%ld", &currFrame);
       break;
     default:
-      // We got data so just store it in our dataMap buffer
-      // we will print out the dataMap buffer once we get to the next #
+
       data = line[0];
       index = (int)line[1];
-      // dataMap[index] = data;
-
       if (symbolPrevFrame[index] == 0) {
         // printf("Initial frame: %ld\n",currFrame);
         symbolPrevFrame[index] = currFrame;

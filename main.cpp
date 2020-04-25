@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
+#include <math.h>
 #include <fstream>
 
 #define sampling_rate 500000000;
@@ -33,6 +33,7 @@ int main(int argc, char *argv[]) {
   long int prevFrame = 0;
   int startTime = 0;
   int endTime = 0;
+  double endTimeDouble= 0.0;
   char header;
   char dataMap[256];
   for (i = 0; i < 256; i++) dataMap[i] = 0;
@@ -74,9 +75,11 @@ int main(int argc, char *argv[]) {
           prevFrame = currFrame;
         }
 
-        // Compute startTime
-        endTime =
-            double(currFrame - prevFrame) / (double)1000000000 * sampling_rate;
+        // Compute endTime
+        endTimeDouble =
+                    double(currFrame - prevFrame) / (double)1000000000 * sampling_rate;
+        endTime = round(endTimeDouble);
+        
 
         // do {
         // This do loop is simply to interpolate between the

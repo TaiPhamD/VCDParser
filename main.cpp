@@ -1,8 +1,11 @@
-#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
+
 #include <fstream>
+
+#define sampling_rate 500000000;
 
 int main(int argc, char *argv[]) {
   printf("Opening file:  %s\n", argv[1]);
@@ -18,17 +21,22 @@ int main(int argc, char *argv[]) {
   size_t len = 0;
   int i = 0;
   int j = 0;
-  char header;
-  long int currFrame = 0;
-  char dataMap[256];
-  for (i = 0; i < 256; i++) dataMap[i] = 0;
 
   i = 0;
+  int step = 0;
   int count = 0;
   char data = 0;
   int index = 0;
   bool doneVarRead = false;
   bool foundVar = false;
+  long int currFrame = 0;
+  long int prevFrame = 0;
+  int startTime = 0;
+  int endTime = 0;
+  char header;
+  char dataMap[256];
+  for (i = 0; i < 256; i++) dataMap[i] = 0;
+
   while ((getline(&line, &len, fp)) != -1) {
     // using printf() in all tests for consistency
     // printf("%s", line);
@@ -60,18 +68,34 @@ int main(int argc, char *argv[]) {
         }
         break;
       case '#':
-        if (currFrame > 0) {
-          outFile << currFrame << ",";
+        sscanf(line + 1, "%ld", &currFrame);
+        if (prevFrame == 0) {
+          // printf("Initial frame: %ld\n",currFrame);
+          prevFrame = currFrame;
+        }
+
+        // Compute startTime
+        endTime =
+            double(currFrame - prevFrame) / (double)1000000000 * sampling_rate;
+
+        // do {
+        // This do loop is simply to interpolate between the
+        // time stamps
+        if (endTime > 0) {
+          outFile << endTime << ",";
           for (j = 0; j < 256; j++) {
             // print out all data map if we have data for it
             if (dataMap[j] != 0) {
               outFile << dataMap[j] << ",";
             }
           }
-          outFile << "\n";
-          count++;
         }
-        sscanf(line + 1, "%ld", &currFrame);
+
+        outFile << "\n";
+        //} while (step < endTime);
+        prevFrame = currFrame;
+
+        step = endTime;
         break;
       default:
         // We got data so just store it in our dataMap buffer

@@ -8,7 +8,6 @@
 #include <stdlib.h>
 #include <string>
 
-
 //#include <vector> MEX or windows sdk does not let me use vector class
 
 #define sampling_rate 500000000;
@@ -101,6 +100,7 @@ public:
       mexPrintf("Error allocating dataBuffer\n");
 
     // mexPrintf("Finish allocating memory\n");
+    // help build progress %;
 
     // reset file pointer back to beginning so we can start from beginning of
     // file; and start proccessing the VCD file!
@@ -118,6 +118,12 @@ public:
     int idx;
     int test = 0;
 
+    /*
+    double progressStep = (double)maxElement/20.;
+    int currentStep=0;
+    int percent =0;
+    double stepIncrement=progressStep;
+    */
     while (std::getline(*MyFile, line)) {
       test++;
       c_line = (char *)line.c_str();
@@ -129,6 +135,22 @@ public:
       case '#':
         // scan the timestamp skipping the '#' symbol
         sscanf(c_line + 1, "%ld", &currFrame);
+
+        /*
+        // print our progress indicator every 5% so we dont flood the log
+        currentStep++;
+        if(currentStep > stepIncrement){
+            stepIncrement=stepIncrement+progressStep;
+            //mexPrintf("progressStep: %.2f,
+        currentStep:%d,stepIncrement:%.2f\n",progressStep,
+            //    currentStep,stepIncrement);
+            percent=percent+5;
+            mexPrintf("percent:%02d",percent);
+            if(percent!=100)
+                mexPrintf("\b\b\b\b\b\b\b\b\b\b");
+
+        }
+        */
         break;
       case '\n':
         break;
@@ -163,7 +185,7 @@ public:
     }
 
     // mexPrintf("elements %d %d \n",lengthBuffer[0],lengthBuffer[1]);
-
+    mexPrintf("\n");
     if (nlhs != count) {
       mexPrintf(
           "WARNING:parsed %d symbols but there are only %d output buffer\n",

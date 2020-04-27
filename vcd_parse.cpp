@@ -7,6 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
+#include <cstring>
+#include <algorithm>
 
 //#include <vector> MEX or windows sdk does not let me use vector class
 
@@ -17,16 +19,16 @@
 using namespace std;
 void _main();
 
-// stupid microsoft windows math.h doesn't include round function
-// so we have to define it here
-int round(double a) {
-  int result;
-  if (a - floor(a) >= 0.5)
-    result = floor(a) + 1;
-  else
-    result = floor(a);
-  return result;
-};
+// // stupid microsoft windows math.h doesn't include round function
+// // so we have to define it here
+// int round(double a) {
+//   int result;
+//   if (a - floor(a) >= 0.5)
+//     result = floor(a) + 1;
+//   else
+//     result = floor(a);
+//   return result;
+// };
 
 /* VCDParse class and parsing code */
 class VCDParse {
@@ -109,10 +111,15 @@ public:
 
     int endTime = 0;
     double endTimeDouble = 0.0;
-    long int currFrame;                  // most recent timestamp
-    long int symbolPrevFrame[maxSymbol]; // previous timestamp for each symbol
-    for (int i = 0; i < maxSymbol; i++)
+    long long int currFrame;                  // most recent timestamp
+    long long int symbolPrevFrame[maxSymbol]; // previous timestamp for each symbol
+    long int symbolCurrIndex[maxSymbol];
+    for (int i = 0; i < maxSymbol; i++){
       symbolPrevFrame[i] = 0;
+      symbolCurrIndex[i]=0;
+    }
+    
+    
     int value;
     int symbolIdx;
     int idx;
@@ -134,7 +141,7 @@ public:
         break;
       case '#':
         // scan the timestamp skipping the '#' symbol
-        sscanf(c_line + 1, "%ld", &currFrame);
+        sscanf(c_line + 1, "%lld", &currFrame);
 
         /*
         // print our progress indicator every 5% so we dont flood the log
@@ -148,7 +155,6 @@ public:
             mexPrintf("percent:%02d",percent);
             if(percent!=100)
                 mexPrintf("\b\b\b\b\b\b\b\b\b\b");
-
         }
         */
         break;
@@ -160,6 +166,7 @@ public:
         if (symbolPrevFrame[symbolIdx] == 0) {
           symbolPrevFrame[symbolIdx] = currFrame;
         }
+
         // Compute endTime
         endTimeDouble = double(currFrame - symbolPrevFrame[symbolIdx]) /
                         (double)1000000000 * sampling_rate;
@@ -177,6 +184,7 @@ public:
           lengthBuffer[symbolIdx - symbolOffset]++;
           // mexPrintf("symbol: %d, %d, %d\n",symbolIdx, endTime, (int32_t)value
           // - 48);
+          //symbolCurrIndex[symbolIdx]= symbolCurrIndex[symbolIdx] + 1;
         }
 
         symbolPrevFrame[symbolIdx] = currFrame;
